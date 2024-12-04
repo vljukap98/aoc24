@@ -1,6 +1,8 @@
 package util
 
-import "strconv"
+import (
+	"strconv"
+)
 
 func ArrStrToI(arr []string) []int {
 	var arrInt []int

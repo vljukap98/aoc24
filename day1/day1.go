@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func Day1Part1() {
+func Day1() {
 	input, _ := os.Open("./day1/day1-input.txt")
 	defer input.Close()
 
@@ -29,6 +29,12 @@ func Day1Part1() {
 		locationIdList1 = append(locationIdList1, line[0])
 		locationIdList2 = append(locationIdList2, line[1])
 	}
+
+	part1(locationIdList1, locationIdList1, len(locationIds))
+	part2(locationIdList1, locationIdList2)
+}
+
+func part1(locationIdList1 []string, locationIdList2 []string, size int) {
 
 	sort.Slice(locationIdList1, func(i, j int) bool {
 		return locationIdList1[i] < locationIdList1[j]
@@ -40,7 +46,7 @@ func Day1Part1() {
 
 	totalSum := 0.0
 
-	for i := 0; i < len(locationIds); i++ {
+	for i := 0; i < size; i++ {
 		list1Member, _ := strconv.Atoi(locationIdList1[i])
 		list2Member, _ := strconv.Atoi(locationIdList2[i])
 
@@ -51,25 +57,7 @@ func Day1Part1() {
 	fmt.Printf("%f\n", totalSum)
 }
 
-func Day1Part2() {
-	input, _ := os.Open("./day1/day1-input.txt")
-	defer input.Close()
-
-	var locationIds []string
-
-	scanner := bufio.NewScanner(input)
-
-	for scanner.Scan() {
-		locationIds = append(locationIds, scanner.Text())
-	}
-
-	var locationIdList1, locationIdList2 []string
-
-	for _, locationId := range locationIds {
-		line := strings.Split(locationId, "   ")
-		locationIdList1 = append(locationIdList1, line[0])
-		locationIdList2 = append(locationIdList2, line[1])
-	}
+func part2(locationIdList1 []string, locationIdList2 []string) {
 
 	freq := make(map[int]int)
 	for _, num := range locationIdList2 {

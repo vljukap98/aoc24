@@ -1,39 +1,22 @@
 package day3
 
 import (
+	"aoc24/util"
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func ReadFileAsText(path string) (string, error) {
-	var fileName string = path
-	file, err := os.ReadFile(fileName)
-	if err != nil {
-		fmt.Printf("Cannot read file %s", fileName)
-		return "", err
-	}
-	fileContent := string(file)
-
-	return fileContent, err
+func Day3() {
+	mulString, _ := util.ReadFileAsText("./day3/day3-input.txt")
+	part1(mulString)
+	part2(mulString)
 }
 
-func Day3Part1() {
-	mulString, _ := ReadFileAsText("./day3/day3-input.txt")
-	calculateMuls(mulString)
-}
-
-func Day3Part2() {
-	mulString, _ := ReadFileAsText("./day3/day3-input.txt")
-	filteredDos := filterDos(mulString)
-	calculateMuls(filteredDos)
-}
-
-func calculateMuls(input string) {
+func part1(mulString string) {
 	re := regexp.MustCompile("mul\\(\\d{1,3},\\d{1,3}\\)")
-	muls := re.FindAllStringSubmatch(input, -1)
+	muls := re.FindAllStringSubmatch(mulString, -1)
 
 	var numStrings []string
 	for _, mul := range muls {
@@ -56,6 +39,11 @@ func calculateMuls(input string) {
 	}
 
 	fmt.Printf("%d", totalSum)
+}
+
+func part2(mulString string) {
+	filteredDos := filterDos(mulString)
+	part1(filteredDos)
 }
 
 func filterDos(s string) string {
