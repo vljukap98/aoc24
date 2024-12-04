@@ -2,30 +2,15 @@ package day2
 
 import (
 	"aoc24/util"
-	"bufio"
 	"fmt"
 	"math"
-	"os"
 	"strings"
 )
 
-func readFile(inputPath string) []string {
-	input, _ := os.Open(inputPath)
-	defer input.Close()
-
-	var rows []string
-
-	scanner := bufio.NewScanner(input)
-
-	for scanner.Scan() {
-		row := scanner.Text()
-		rows = append(rows, row)
-	}
-	return rows
-}
+func Day2() {}
 
 func Day2Part1() {
-	inputRows := readFile("./day2/day2-input.txt")
+	inputRows, _ := util.ReadLines("./day2/day2-input.txt")
 
 	safeLevels := 0
 
@@ -43,7 +28,7 @@ func Day2Part1() {
 }
 
 func Day2Part2() {
-	inputRows := readFile("./day2/day2-input.txt")
+	inputRows, _ := util.ReadLines("./day2/day2-input.txt")
 
 	safeLevels := 0
 
