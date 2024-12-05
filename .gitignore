@@ -27,3 +27,5 @@ go.work.sum
 .history
 
 day*/*.txt
+
+.vscode
