@@ -15,22 +15,20 @@ const (
 )
 
 type guardState struct {
-	CurrPosX      int
-	CurrPosY      int
+	CurrCoord     coordinate
 	CurrDirection int
 }
 
 type coordinate struct {
-	x       int
-	y       int
-	visited bool
+	x int
+	y int
 }
 
 func Day6() {
 	input, _ := util.ReadLines("./day6/day6-input.txt")
 
-	var coordinates []coordinate
-	var startPos coordinate
+	coordinates := make(map[coordinate]bool)
+	guard := guardState{}
 	mat := make([][]string, 0)
 
 	for y, lines := range input {
@@ -38,58 +36,87 @@ func Day6() {
 		mat = append(mat, make([]string, 0))
 		for x, point := range points {
 			mat[y] = append(mat[y], point)
+			coordinate := coordinate{x, y}
 			if point == "^" {
-				startPos = coordinate{x, y, true}
+				guard = guardState{coordinate, directionUp}
 			}
-			coordinates = append(coordinates, coordinate{x, y, false})
 		}
 	}
 
-	fmt.Println(startPos)
-	fmt.Println(coordinates)
-	//TODO: start walking
+	part1(mat, &guard, coordinates)
+	part2()
 }
 
-func moveGuard(mat [][]string, guard guardState) {
+func part1(mat [][]string, guard *guardState, coordinates map[coordinate]bool) {
+	for guard.CurrCoord.x != -1 && guard.CurrCoord.y != -1 {
+		coordinates[guard.CurrCoord] = true
+		moveGuard(mat, guard)
+	}
+
+	visits := 0
+	for _, coords := range coordinates {
+		if coords {
+			visits += 1
+		}
+	}
+
+	fmt.Println(visits)
+}
+
+func part2() {
+	//TODO: check every # with
+	// --------------->
+	//               |
+	//               |
+	//               |
+	//               |
+	//               |
+	//               |
+	//               |
+	//				 ˇ
+	// <------------
+}
+
+func moveGuard(mat [][]string, guard *guardState) {
 	if guard.CurrDirection == directionUp {
-		nextPos := mat[guard.CurrPosY-1][guard.CurrPosX]
+		nextPos := mat[guard.CurrCoord.y-1][guard.CurrCoord.x]
 
 		if nextPos == "#" { //guard comes across an obstacle - change direction
 			guard.CurrDirection = directionRight
-		} else if nextPos == "." { //guard comes across a path - keep moving in the direction
-			guard.CurrPosY -= 1
+		} else if nextPos == "." || nextPos == "^" { //guard comes across a path - keep moving in the direction
+			guard.CurrCoord.y -= 1
 		} else { //guard will leave the mapped area
-			guard.CurrPosY = -1
+			guard.CurrCoord.y = -1
 		}
 	} else if guard.CurrDirection == directionRight {
-		nextPos := mat[guard.CurrPosY][guard.CurrPosX+1]
+		nextPos := mat[guard.CurrCoord.y][guard.CurrCoord.x+1]
 
 		if nextPos == "#" { //guard comes across an obstacle - change direction
 			guard.CurrDirection = directionDown
-		} else if nextPos == "." { //guard comes across a path - keep moving in the direction
-			guard.CurrPosX += 1
+		} else if nextPos == "." || nextPos == "^" { //guard comes across a path - keep moving in the direction
+			guard.CurrCoord.x += 1
 		} else { //guard will leave the mapped area
-			guard.CurrPosX = -1
+			guard.CurrCoord.x = -1
 		}
 	} else if guard.CurrDirection == directionDown {
-		nextPos := mat[guard.CurrPosY+1][guard.CurrPosX]
+		nextPos := mat[guard.CurrCoord.y+1][guard.CurrCoord.x]
 
 		if nextPos == "#" { //guard comes across an obstacle - change direction
 			guard.CurrDirection = directionLeft
-		} else if nextPos == "." { //guard comes across a path - keep moving in the direction
-			guard.CurrPosY += 1
+		} else if nextPos == "." || nextPos == "^" { //guard comes across a path - keep moving in the direction
+			guard.CurrCoord.y += 1
 		} else { //guard will leave the mapped area
-			guard.CurrPosY = -1
+			guard.CurrCoord.y = -1
 		}
 	} else if guard.CurrDirection == directionLeft {
-		nextPos := mat[guard.CurrPosY][guard.CurrPosX-1]
+		nextPos := mat[guard.CurrCoord.y][guard.CurrCoord.x-1]
 
 		if nextPos == "#" { //guard comes across an obstacle - change direction
 			guard.CurrDirection = directionUp
-		} else if nextPos == "." { //guard comes across a path - keep moving in the direction
-			guard.CurrPosX -= 1
+		} else if nextPos == "." || nextPos == "^" { //guard comes across a path - keep moving in the direction
+			guard.CurrCoord.x -= 1
 		} else { //guard will leave the mapped area
-			guard.CurrPosX = -1
+			guard.CurrCoord.x = -1
 		}
 	}
 }
