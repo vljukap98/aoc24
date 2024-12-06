@@ -44,7 +44,7 @@ func Day6() {
 	}
 
 	part1(mat, &guard, coordinates)
-	part2()
+	part2(mat)
 }
 
 func part1(mat [][]string, guard *guardState, coordinates map[coordinate]bool) {
@@ -61,20 +61,6 @@ func part1(mat [][]string, guard *guardState, coordinates map[coordinate]bool) {
 	}
 
 	fmt.Println(visits)
-}
-
-func part2() {
-	//TODO: check every # with
-	// --------------->
-	//               |
-	//               |
-	//               |
-	//               |
-	//               |
-	//               |
-	//               |
-	//				 ˇ
-	// <------------
 }
 
 func moveGuard(mat [][]string, guard *guardState) {
@@ -118,5 +104,23 @@ func moveGuard(mat [][]string, guard *guardState) {
 		} else { //guard will leave the mapped area
 			guard.CurrCoord.x = -1
 		}
+	}
+}
+
+func part2(mat [][]string) {
+	for y := 0; y < len(mat)-1; y++ {
+		for x := 0; x < len(mat[y])-1; x++ {
+			check(x, y, mat)
+		}
+	}
+}
+
+func check(x int, y int, mat [][]string) {
+	checkRight(x, mat[y])
+}
+
+func checkRight(x int, matRow []string) {
+	for i := x; i < len(matRow); i++ {
+
 	}
 }
