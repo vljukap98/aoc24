@@ -110,17 +110,15 @@ func moveGuard(mat [][]string, guard *guardState) {
 func part2(mat [][]string) {
 	for y := 0; y < len(mat)-1; y++ {
 		for x := 0; x < len(mat[y])-1; x++ {
-			check(x, y, mat)
+			check(x, y, mat, directionRight)
 		}
 	}
 }
 
-func check(x int, y int, mat [][]string) {
-	checkRight(x, mat[y])
-}
+func check(x int, y int, mat [][]string, direction int) {
+	//TODO recursively check whether '#' matches depending on direction
 
-func checkRight(x int, matRow []string) {
-	for i := x; i < len(matRow); i++ {
+	if direction == directionRight {
 
 	}
 }
