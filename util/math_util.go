@@ -2,99 +2,88 @@ package util
 
 import (
 	"strconv"
-	"strings"
 	"unicode"
 )
 
-// generatePermutations recursively generates all permutations of '*' and '+' of length n.
-func generatePermutations(n int, current string, result *[]string) {
+func generatePermutations(n int, current []string, result *[][]string) {
 	if n == 0 {
-		*result = append(*result, current)
+		permutation := make([]string, len(current))
+		copy(permutation, current)
+		*result = append(*result, permutation)
 		return
 	}
-	generatePermutations(n-1, current+"*", result)
-	generatePermutations(n-1, current+"+", result)
+	generatePermutations(n-1, append(current, "*"), result)
+	generatePermutations(n-1, append(current, "+"), result)
+	generatePermutations(n-1, append(current, "|"), result)
 }
 
-func Generate(n int) []string {
-	var result []string
-	generatePermutations(n, "", &result)
+func Generate(n int) [][]string {
+	var result [][]string
+	generatePermutations(n, []string{}, &result)
 	return result
 }
 
-// precedence returns the precedence of the given operator
-func precedence(op string) int {
-	switch op {
-	case "+", "-":
-		return 1
-	case "*", "/":
-		return 2
-	}
-	return 0
-}
+func EvaluateExpression(s string) int {
+	token := ""
+	currOperator := "*"
+	result := 0
+	temp := s + "."
 
-// applyOp applies the operator on the two operands
-func applyOp(a, b int, op string) int {
-	switch op {
-	case "+":
-		return a + b
-	case "-":
-		return a - b
-	case "*":
-		return a * b
-	case "/":
-		return a / b
-	}
-	return 0
-}
-
-// isOperator checks if the character is an operator
-func isOperator(c string) bool {
-	return c == "+" || c == "-" || c == "*" || c == "/"
-}
-
-// evaluatePostfix evaluates the postfix expression
-func EvaluatePostfix(tokens []string) int {
-	stack := []int{}
-
-	for _, token := range tokens {
-		if isOperator(token) {
-			b := stack[len(stack)-1]
-			stack = stack[:len(stack)-1]
-			a := stack[len(stack)-1]
-			stack = stack[:len(stack)-1]
-			result := applyOp(a, b, token)
-			stack = append(stack, result)
-		} else {
-			num, _ := strconv.Atoi(token)
-			stack = append(stack, num)
-		}
-	}
-	return stack[0]
-}
-
-// infixToPostfix converts an infix expression to a postfix expression
-func InfixToPostfix(expression string) []string {
-	output := []string{}
-	operators := []string{}
-	tokens := strings.Fields(expression)
-
-	for _, token := range tokens {
-		if unicode.IsDigit(rune(token[0])) {
-			output = append(output, token)
-		} else if isOperator(token) {
-			for len(operators) > 0 && precedence(operators[len(operators)-1]) >= precedence(token) {
-				output = append(output, operators[len(operators)-1])
-				operators = operators[:len(operators)-1]
+	for _, c := range temp {
+		if unicode.IsDigit(c) {
+			token += string(c)
+		} else if c != ' ' {
+			val, _ := strconv.Atoi(token)
+			if currOperator == "*" {
+				result *= val
+			} else if currOperator == "+" {
+				result += val
 			}
-			operators = append(operators, token)
+
+			token = ""
+			currOperator = string(c)
 		}
 	}
 
-	for len(operators) > 0 {
-		output = append(output, operators[len(operators)-1])
-		operators = operators[:len(operators)-1]
+	return result
+}
+
+func EvaluateExpression2(s string) int {
+	token := ""
+	currOperator := "+"
+	result := 0
+	temp := s + "."
+	operands := []int{}
+
+	for _, c := range temp {
+		if unicode.IsDigit(c) {
+			token += string(c)
+		} else if c != ' ' {
+			if token != "" {
+				val, _ := strconv.Atoi(token)
+				if currOperator == "*" {
+					if len(operands) > 0 {
+						operands[len(operands)-1] *= val
+					} else {
+						result *= val
+					}
+				} else if currOperator == "+" {
+					if len(operands) > 0 {
+						operands[len(operands)-1] += val
+					} else {
+						result += val
+					}
+				} else if currOperator == "|" {
+					strResult := strconv.Itoa(result)
+					strVal := strconv.Itoa(val)
+					concatenated := strResult + strVal
+					result, _ = strconv.Atoi(concatenated)
+				}
+			}
+			token = ""
+			currOperator = string(c)
+		}
 	}
 
-	return output
+	return result
 }

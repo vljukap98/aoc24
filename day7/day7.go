@@ -2,6 +2,7 @@ package day7
 
 import (
 	"aoc24/util"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -10,25 +11,41 @@ func Day7() {
 	input, _ := util.ReadLines("./day7/day7-input.txt")
 
 	part1(input)
+	part2(input)
 }
 
 func part1(input []string) {
-	count := 0
+	sum := 0
 	for _, line := range input {
 		before, after, _ := strings.Cut(line, ": ")
-		//TODO: generate permutations for 'after'
-		// check if any permutation result equals 'before'
 		afterPerms := getPermutations(strings.Split(after, " "))
 		for _, ap := range afterPerms {
-			postfix := util.InfixToPostfix(ap)
-			eval := util.EvaluatePostfix(postfix)
+			eval := util.EvaluateExpression(ap)
 			beforeInt, _ := strconv.Atoi(before)
 			if beforeInt == eval {
-				count += eval
+				sum += eval
 				break
 			}
 		}
 	}
+	fmt.Println(sum)
+}
+
+func part2(input []string) {
+	sum := 0
+	for _, line := range input {
+		before, after, _ := strings.Cut(line, ": ")
+		afterPerms := getPermutations(strings.Split(after, " "))
+		for _, ap := range afterPerms {
+			eval := util.EvaluateExpression2(ap)
+			beforeInt, _ := strconv.Atoi(before)
+			if beforeInt == eval {
+				sum += eval
+				break
+			}
+		}
+	}
+	fmt.Println(sum)
 }
 
 func getPermutations(nums []string) []string {
@@ -38,8 +55,7 @@ func getPermutations(nums []string) []string {
 	for _, opPer := range operatorPerms {
 		var infixString string
 
-		opArr := strings.Split(opPer, "")
-		for i, op := range opArr {
+		for i, op := range opPer {
 			infixString += nums[i]
 			infixString += op
 		}
