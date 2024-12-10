@@ -49,3 +49,24 @@ func ReadMat(path string) ([][]string, error) {
 	}
 	return lines, scanner.Err()
 }
+
+func WriteString(text string) {
+	f, err := os.Create("test.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	l, err := f.WriteString(text)
+	if err != nil {
+		fmt.Println(err)
+		f.Close()
+		return
+	}
+	fmt.Println(l, "bytes written successfully")
+	err = f.Close()
+	if err != nil {
+		fmt.Println(err)
+		return
+
+	}
+}

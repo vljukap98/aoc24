@@ -1,7 +1,7 @@
 package day9
 
 type Block struct {
-	Id          int
+	Id          string
 	FilledSpace int
 	FreeSpace   int
 }
