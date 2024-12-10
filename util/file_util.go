@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func ReadFileAsText(path string) (string, error) {
@@ -29,6 +30,22 @@ func ReadLines(path string) ([]string, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
+}
+
+func ReadMat(path string) ([][]string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines [][]string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		elem := strings.Split(scanner.Text(), "")
+		lines = append(lines, elem)
 	}
 	return lines, scanner.Err()
 }
