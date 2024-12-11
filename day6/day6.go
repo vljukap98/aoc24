@@ -6,24 +6,6 @@ import (
 	"strings"
 )
 
-const (
-	_ = iota
-	directionUp
-	directionRight
-	directionDown
-	directionLeft
-)
-
-type guardState struct {
-	CurrCoord     coordinate
-	CurrDirection int
-}
-
-type coordinate struct {
-	x int
-	y int
-}
-
 func Day6() {
 	input, _ := util.ReadLines("./day6/day6-input.txt")
 

@@ -4,6 +4,14 @@ import (
 	"strconv"
 )
 
+func Ator(text string) rune {
+	var converter rune
+	for _, runeValue := range text {
+		converter = runeValue
+	}
+	return converter
+}
+
 func ContainsI(s []int, e int) bool {
 	for _, a := range s {
 		if a == e {
@@ -45,6 +53,10 @@ func ArrStrToI(arr []string) []int {
 	return arrInt
 }
 
-func Remove(slice []int, s int) []int {
+func RemoveI(slice []int, s int) []int {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+func RemoveS(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
 }
