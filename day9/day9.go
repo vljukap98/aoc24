@@ -8,7 +8,7 @@ import (
 )
 
 func Day9() {
-	input, _ := util.ReadFileAsText("./day9/day9-input-test.txt")
+	input, _ := util.ReadFileAsText("./day9/day9-input.txt")
 
 	numbers := strings.Split(input, "")
 	var blocks []Block
@@ -72,7 +72,6 @@ func part2(blocks []Block) {
 		disk = append(disk, Block2{used, make([]string, 0), free})
 	}
 
-	totalNewUsed := 0
 	for i := len(disk) - 1; i > 0; i-- {
 		for j := 0; j < len(disk); j++ {
 			if len(disk[i].Used) <= len(disk[j].Free) {
@@ -80,40 +79,28 @@ func part2(blocks []Block) {
 					disk[j].NewUsed = append(disk[j].NewUsed, disk[i].Used[k]) //append to newly used
 					disk[i].Used[k] = "."                                      // mark previously used with '.'
 					disk[j].Free = util.RemoveS(disk[j].Free, 0)
-					totalNewUsed += len(disk[j].Used)    // remove free from left block
-					totalNewUsed += len(disk[j].NewUsed) // remove free from left block
 				}
 				break
 			}
 		}
 	}
 
-	util.WriteString(diskString(disk))
+	var diskList []string
+	for _, block := range disk {
+		diskList = append(diskList, block.Used...)
+		diskList = append(diskList, block.NewUsed...)
+		diskList = append(diskList, block.Free...)
+	}
 
-	// I think below code doesn't calculate things right - because I convert it to string, but it needs to remain a list
-	// 9999999 is 1 number not 7 nines - this is why test input works but real puzzle doesn't
-	diskMap := make(map[int]rune, totalNewUsed)
-	for i, j := range diskString(disk) {
-		if j != '.' {
-			diskMap[i] = j
+	total := 0
+
+	for i, b := range diskList {
+		if b != "." {
+			idx, _ := strconv.Atoi(b)
+			total += i * idx
+
 		}
 	}
-	total := 0
-	for i, v := range diskMap {
-		vv := string(v)
-		idx, _ := strconv.Atoi(vv)
-		total += i * idx
-	}
+
 	fmt.Println(total)
-}
-
-func diskString(disk []Block2) string {
-	var diskString string
-	for _, v := range disk {
-		diskString += strings.Join(v.Used, "")
-		diskString += strings.Join(v.NewUsed, "")
-		diskString += strings.Join(v.Free, "")
-	}
-
-	return diskString
 }
