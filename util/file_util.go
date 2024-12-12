@@ -50,6 +50,22 @@ func ReadMat(path string) ([][]string, error) {
 	return lines, scanner.Err()
 }
 
+func ReadMatI(path string) ([][]int, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines [][]int
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		elem := ArrStrToI(strings.Split(scanner.Text(), ""))
+		lines = append(lines, elem)
+	}
+	return lines, scanner.Err()
+}
+
 func WriteString(text string) {
 	f, err := os.Create("test.txt")
 	if err != nil {
