@@ -11,17 +11,15 @@ func Day10() {
 }
 
 func part1(mat [][]int) {
-	// for each member in mat[y] if it's a 0
-	// try finding the next number up, left, right, down - recursively
-
-	hikingPaths := 0
-	for y := 0; y < len(mat); y++ {
-		for x := 0; x < len(mat[y]); x++ {
+	h := len(mat)
+	w := len(mat[0])
+	hikingPaths := make([]int, 0)
+	for y := 0; y < h; y++ {
+		for x := 0; x < w; x++ {
 			currNum := mat[y][x]
-			//TODO: track previously visited nine positions
-			// sum all paths that lead to the visited nines?
-			if currNum == 0 && canFindHikingPath(currNum, x, y, mat) {
-				hikingPaths += 1
+			if currNum == 0 {
+				hiker := Hiker{Pos{x, y}, currNum, right, []Pos{Pos{x, y}}, []int{left}}
+				hikingPaths = append(hikingPaths, findHikingPath(hiker, mat, x, y)...)
 			}
 		}
 	}
@@ -29,76 +27,20 @@ func part1(mat [][]int) {
 	fmt.Println(hikingPaths)
 }
 
-func canFindHikingPath(currNum int, x int, y int, mat [][]int) bool {
-	hikingDirection := hikingDirectionRight
-	if hikingDirection == hikingDirectionRight &&
-		!canFindHikingPathRight(currNum, x, y, mat) {
-		hikingDirection = hikingDirectionDown
-	} else if hikingDirection == hikingDirectionDown &&
-		!canFindHikingPathDown(currNum, x, y, mat) {
-		hikingDirection = hikingDirectionLeft
-	} else if hikingDirection == hikingDirectionLeft &&
-		!canFindHikingPathLeft(currNum, x, y, mat) {
-		hikingDirection = hikingDirectionUp
-	} else if hikingDirection == hikingDirectionUp &&
-		!canFindHikingPathUp(currNum, x, y, mat) {
-		return false
+func findHikingPath(hiker Hiker, mat [][]int, x int, y int) []int {
+	// hiker might find 1 path to the 9
+	// but there could be paths to other nines
+	if hiker.currNum == 9 {
+		return append(make([]int, 0), hiker.currNum)
 	}
-	return true
-}
 
-func canFindHikingPathRight(currNum int, x int, y int, mat [][]int) bool {
-	if currNum == 9 {
-		return true
-	}
-	if x == len(mat[y])-1 {
-		return false
-	}
-	if currNum+1 == mat[y][x+1] {
-		currNum := mat[y][x+1]
-		return canFindHikingPathRight(currNum, x+1, y, mat)
-	}
-	return false
-}
+	hiker.currNum++
 
-func canFindHikingPathDown(currNum int, x int, y int, mat [][]int) bool {
-	if currNum == 9 {
-		return true
-	}
-	if y == len(mat)-1 {
-		return false
-	}
-	if currNum+1 == mat[y+1][x] {
-		currNum := mat[y+1][x]
-		return canFindHikingPathDown(currNum, x, y+1, mat)
-	}
-	return false
-}
+	hikingPaths := make([]int, 0)
+	hikingPaths = append(hikingPaths, findHikingPath(hiker, mat, x+1, y)...)
+	hikingPaths = append(hikingPaths, findHikingPath(hiker, mat, x, y+1)...)
+	hikingPaths = append(hikingPaths, findHikingPath(hiker, mat, x-1, y)...)
+	hikingPaths = append(hikingPaths, findHikingPath(hiker, mat, x, y-1)...)
 
-func canFindHikingPathLeft(currNum int, x int, y int, mat [][]int) bool {
-	if currNum == 9 {
-		return true
-	}
-	if x == 0 {
-		return false
-	}
-	if currNum+1 == mat[y][x-1] {
-		currNum := mat[y][x-1]
-		return canFindHikingPathLeft(currNum, x-1, y, mat)
-	}
-	return false
-}
-
-func canFindHikingPathUp(currNum int, x int, y int, mat [][]int) bool {
-	if currNum == 9 {
-		return true
-	}
-	if y == 0 {
-		return false
-	}
-	if currNum+1 == mat[y-1][x] {
-		currNum := mat[y-1][x]
-		return canFindHikingPathUp(currNum, x, y-1, mat)
-	}
-	return false
+	return hikingPaths
 }
