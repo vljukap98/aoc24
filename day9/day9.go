@@ -72,7 +72,7 @@ func part2(blocks []Block) {
 		disk = append(disk, Block2{used, make([]string, 0), free})
 	}
 
-	for i := len(disk) - 1; i > 0; i-- {
+	for i := len(disk) - 1; i >= 0; i-- {
 		for j := 0; j < len(disk); j++ {
 			if len(disk[i].Used) <= len(disk[j].Free) {
 				for k := 0; k < len(disk[i].Used); k++ {
