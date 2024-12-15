@@ -23,7 +23,7 @@ func Day9() {
 		blocks = append(blocks, Block{id, filledSpace + freeSpace, filledSpace, freeSpace})
 	}
 
-	// part1(blocks, totalFilled)
+	part1(blocks, totalFilled)
 	part2(blocks)
 }
 
@@ -72,9 +72,9 @@ func part2(blocks []Block) {
 		disk = append(disk, Block2{used, make([]string, 0), free})
 	}
 
-	for i := len(disk) - 1; i >= 0; i-- {
-		for j := 0; j < len(disk); j++ {
-			if len(disk[i].Used) <= len(disk[j].Free) {
+	for i := len(disk) - 1; i > 0; i-- {
+		for j := 0; j < i; j++ {
+			if len(disk[j].Free) >= len(disk[i].Used) {
 				for k := 0; k < len(disk[i].Used); k++ {
 					disk[j].NewUsed = append(disk[j].NewUsed, disk[i].Used[k]) //append to newly used
 					disk[i].Used[k] = "."                                      // mark previously used with '.'
@@ -103,4 +103,20 @@ func part2(blocks []Block) {
 	}
 
 	fmt.Println(total)
+}
+
+func stringDisk(disk []Block2) string {
+	var stringDisk string
+	for _, block := range disk {
+		for _, u := range block.Used {
+			stringDisk += u
+		}
+		for _, u := range block.NewUsed {
+			stringDisk += u
+		}
+		for _, u := range block.Free {
+			stringDisk += u
+		}
+	}
+	return stringDisk
 }
