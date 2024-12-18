@@ -1,8 +1,15 @@
 package util
 
 import (
+	"fmt"
 	"strconv"
 )
+
+func PrintMat(mat [][]string) {
+	for _, v := range mat {
+		fmt.Println(v)
+	}
+}
 
 func Ator(text string) rune {
 	var converter rune
