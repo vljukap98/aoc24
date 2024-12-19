@@ -1,5 +1,7 @@
 package main
 
+import "aoc24/day18"
+
 func main() {
 	// day1.Day1()
 	// day2.Day2()
@@ -11,4 +13,5 @@ func main() {
 	// day8.Day8()
 	// day9.Day9()
 	// day10.Day10()
+	day18.Day18()
 }

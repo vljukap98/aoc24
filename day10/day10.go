@@ -13,18 +13,18 @@ func Day10() {
 func part1(mat [][]int) {
 	h := len(mat)
 	w := len(mat[0])
-	hikingPaths := make([]int, 0)
+	count := 0
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
 			currNum := mat[y][x]
-			if currNum == 0 {
-				hiker := Hiker{Pos{x, y}, currNum, right, []Pos{Pos{x, y}}, []int{left}}
-				hikingPaths = append(hikingPaths, findHikingPath(hiker, mat, x, y)...)
-			}
+			hikingPaths := make([]int, 0)
+			hiker := Hiker{Pos{x, y}, currNum, right, []Pos{{x, y}}, []int{left}}
+			hikingPaths = append(hikingPaths, findHikingPath(hiker, mat, x, y)...)
+			count += len(hikingPaths)
 		}
 	}
 
-	fmt.Println(hikingPaths)
+	fmt.Println(count)
 }
 
 func findHikingPath(hiker Hiker, mat [][]int, x int, y int) []int {
@@ -32,6 +32,22 @@ func findHikingPath(hiker Hiker, mat [][]int, x int, y int) []int {
 	// but there could be paths to other nines
 	if hiker.currNum == 9 {
 		return append(make([]int, 0), hiker.currNum)
+	}
+
+	h := len(mat)
+	w := len(mat[0])
+
+	if x < 0 {
+		return make([]int, 0)
+	}
+	if y < 0 {
+		return make([]int, 0)
+	}
+	if x >= w {
+		return make([]int, 0)
+	}
+	if y >= h {
+		return make([]int, 0)
 	}
 
 	hiker.currNum++
